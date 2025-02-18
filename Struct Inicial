@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+   
+    struct Aluno{
+        char nome[50];
+        int idade;
+        int matricula;
+        char curso[50];
+    };
+    
+    struct Aluno aluno;
+    strcpy(aluno.nome, "Alvaro Lopes Rios");
+    aluno.idade = 30;
+    aluno.matricula = 123456;
+    strcpy(aluno.curso, "ADS");
+    
+    printf("Nome do Aluno: %s\nIdade: %i\nMatricula: %i\nCurso: %s", aluno.nome, aluno.idade, aluno.matricula, aluno.curso);
+    
+    
+
+    return 0;
+}
