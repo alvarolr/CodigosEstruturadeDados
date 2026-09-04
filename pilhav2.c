@@ -1,25 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX 5
+#define MAX 5 // Define o tamanho máximo da pilha
 
+// Estrutura da pilha
 typedef struct {
     int itens[MAX];
     int topo;
 } Pilha;
 
+// Função para inicializar a pilha
 void inicializar(Pilha *p) {
     p->topo = -1;
 }
 
+// Função para verificar se a pilha está vazia
 int estaVazia(Pilha *p) {
     return (p->topo == -1);
 }
 
+// Função para verificar se a pilha está cheia
 int estaCheia(Pilha *p) {
     return (p->topo == MAX - 1);
 }
 
+// Função para inserir um elemento na pilha (PUSH)
 void push(Pilha *p, int valor) {
     if (estaCheia(p)) {
         printf("Erro: Pilha cheia!\n");
@@ -27,10 +32,13 @@ void push(Pilha *p, int valor) {
     }
     p->topo++;
     p->itens[p->topo] = valor;
+    printf("Inserido: %d\n", valor);
 }
 
+// Função para remover um elemento da pilha (POP)
 int pop(Pilha *p) {
     if (estaVazia(p)) {
+        printf("Erro: Pilha vazia!\n");
         return -1;
     }
     int valor = p->itens[p->topo];
@@ -38,68 +46,61 @@ int pop(Pilha *p) {
     return valor;
 }
 
-void exibir(Pilha *p, const char *nome) {
+// Função para exibir a pilha
+void exibir(Pilha *p) {
     if (estaVazia(p)) {
-        printf("%s: [ Vazia ]\n", nome);
+        printf("Pilha vazia!\n");
         return;
     }
-    printf("%s (base -> topo): ", nome);
+    printf("Pilha: ");
     for (int i = 0; i <= p->topo; i++) {
         printf("%d ", p->itens[i]);
     }
     printf("\n");
 }
 
-// Função para remover um valor específico do meio da pilha
-int removerEspecifico(Pilha *principal, int valorAlvo) {
-    Pilha auxiliar;
-    inicializar(&auxiliar);
-    
+// Função para remover um item específico da pilha preservando a ordem dos demais
+void removerEspecifico(Pilha *p, int valorAlvo) {
+    Pilha temp;
+    inicializar(&temp);
     int encontrado = 0;
 
-    // 1. Desempilha da principal para a auxiliar até achar o valor ou esvaziar
-    while (!estaVazia(principal)) {
-        int atual = pop(principal);
-        
-        if (atual == valorAlvo) {
-            encontrado = 1;
-            break; // Encontrou o valor, para o loop (ele não vai para a auxiliar)
+    // Esvazia a pilha original para a temporária, procurando o valor alvo
+    while (!estaVazia(p)) {
+        int v = pop(p);
+        if (v == valorAlvo && !encontrado) {
+            encontrado = 1; // Descarta a primeira ocorrência do valor encontrado
+        } else {
+            push(&temp, v);
         }
-        
-        push(&auxiliar, atual);
     }
 
-    // 2. Devolve os elementos da auxiliar de volta para a principal
-    while (!estaVazia(&auxiliar)) {
-        push(principal, pop(&auxiliar));
+    // Devolve os elementos da pilha temporária de volta para a original
+    while (!estaVazia(&temp)) {
+        push(p, pop(&temp));
     }
 
-    return encontrado;
+    if (encontrado) {
+        printf("Elemento %d removido com sucesso da pilha!\n", valorAlvo);
+    } else {
+        printf("Elemento %d nao foi encontrado na pilha!\n", valorAlvo);
+    }
 }
 
 int main() {
     Pilha p;
     inicializar(&p);
 
-    // Inserindo elementos (10 fica na base, 50 no topo)
     push(&p, 10);
     push(&p, 20);
     push(&p, 30);
-    push(&p, 40);
-    push(&p, 50);
-
-    exibir(&p, "Pilha Original");
-
-    int alvo = 30;
-    printf("\nRemovendo o valor %d do meio...\n", alvo);
     
-    if (removerEspecifico(&p, alvo)) {
-        printf("Valor %d removido com sucesso!\n", alvo);
-    } else {
-        printf("Valor %d nao encontrado na pilha.\n", alvo);
-    }
+    exibir(&p);
 
-    exibir(&p, "Pilha Apos a Remocao");
+    // Testando a remoção de um item específico (ex: 20, que está no meio)
+    removerEspecifico(&p, 20);
+
+    exibir(&p);
 
     return 0;
 }
