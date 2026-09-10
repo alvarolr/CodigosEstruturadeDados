@@ -4,12 +4,12 @@ class No:
         self.valor = valor
         self.esquerda = None
         self.direita = None
-        self.altura = 1  # NOVO: Altura inicial do nó (folha começa com altura 1)
+        self.altura = 0  # Folha começa com altura 0
 
-# Função auxiliar para retornar a altura de um nó (trata nós nulos como altura 0)
+# Função auxiliar para retornar a altura de um nó (nós nulos retornam altura -1)
 def altura(no):
     if no is None:
-        return 0
+        return -1
     return no.altura
 
 # Função auxiliar para calcular o Fator de Balanceamento de um nó
