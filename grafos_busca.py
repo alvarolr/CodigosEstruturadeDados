@@ -55,8 +55,41 @@ class Grafo:
     # Retorna a lista com a ordem completa dos vértices percorridos
     return ordem_visita
 
+  # Método que realiza a Busca em Profundidade (DFS) a partir de um vértice inicial
+  def dfs(self, inicio):
+    # Conjunto para rastrear os vértices já visitados
+    visitados = set()
 
-# --- Exemplo de uso da BFS ---
+    # Usamos uma lista como pilha (LIFO - Last In, First Out)
+    # Colocamos o vértice inicial na pilha
+    pilha = [inicio]
+
+    # Lista que vai armazenar a ordem em que os vértices foram visitados
+    ordem_visita = []
+
+    # Loop principal executado enquanto houver elementos na pilha
+    while pilha:
+      # Remove e retorna o último elemento adicionado na pilha
+      vertice_atual = pilha.pop()
+
+      # Se o vértice ainda não foi visitado, processamos ele
+      if vertice_atual not in visitados:
+        visitados.add(vertice_atual)
+        ordem_visita.append(vertice_atual)
+
+        # Adiciona os vizinhos à pilha.
+        # Dica: Se iterarmos normalmente, o último vizinho da lista será o primeiro a ser desempilhado.
+        # Se quisermos manter uma ordem previsível da esquerda para a direita, 
+        # podemos inverter os vizinhos ao empilhar, ou deixá-los como estão.
+        for vizinho in reversed(self.grafo[vertice_atual]):
+          if vizinho not in visitados:
+            pilha.append(vizinho)
+
+    # Retorna a lista com a ordem dos vértices percorridos em profundidade
+    return ordem_visita
+
+
+# --- Exemplo de uso da BFS e da DFS ---
 
 # Cria uma instância do grafo para simular uma rede de pessoas
 rede = Grafo()
@@ -68,4 +101,6 @@ rede.adicionar_aresta("Bruno", "Daniel")
 
 # Executa a BFS partindo da "Ana" e imprime a ordem de visitação
 print("Ordem de visita (BFS):", rede.bfs("Ana"))
-# Saída esperada: ['Ana', 'Bruno', 'Carla', 'Daniel']
+
+# Executa a DFS partindo da "Ana" e imprime a ordem de visitação
+print("Ordem de visita (DFS):", rede.dfs("Ana"))
